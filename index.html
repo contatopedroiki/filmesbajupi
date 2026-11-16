@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossa Watchlist - Pedro & Bárbara</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf4f8',
+                            100: '#fbe8f2',
+                            500: '#ec4899',
+                            650: '#be185d',
+                            700: '#9d174d',
+                            900: '#500724',
+                            dark: '#0f0715',
+                            card: '#1a1025',
+                            border: '#2e1c42'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0510;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #271638;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ec4899;
+        }
+    </style>
+</head>
+<body class="bg-[#0b0510] text-slate-100 min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-[#241336] bg-[#10071a]/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pink-600 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-pink-600/30">
+                    <i class="fa-solid fa-heart-pulse text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-300 bg-clip-text text-transparent">Nossa Watchlist</h1>
+                    <p class="text-xs text-slate-400">Pedro <span class="text-pink-500">❤️</span> Bárbara — Maratona a Dois</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 flex-wrap justify-center">
+                <button onclick="openAddModal()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-medium px-4 py-2.5 rounded-xl text-sm shadow-lg shadow-pink-600/25 transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Adicionar Filme ou Série
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+        
+        <!-- Stats Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-8">
+            <div class="bg-[#150a21] border border-[#241336] rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-film"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-400">Total na Lista</p>
+                    <h3 id="statTotal" class="text-lg font-bold text-slate-100">0</h3>
+                </div>
+            </div>
+            <div class="bg-[#150a21] border border-[#241336] rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-400">Para Ver</p>
+                    <h3 id="statPending" class="text-lg font-bold text-slate-100">0</h3>
+                </div>
+            </div>
+            <div class="bg-[#150a21] border border-[#241336] rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-400">Pedro Assistiu</p>
+                    <h3 id="statPedro" class="text-lg font-bold text-slate-100">0</h3>
+                </div>
+            </div>
+            <div class="bg-[#150a21] border border-[#241336] rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-400">Bárbara Assistiu</p>
+                    <h3 id="statBarbara" class="text-lg font-bold text-slate-100">0</h3>
+                </div>
+            </div>
+            <div class="bg-[#150a21] border border-[#241336] rounded-2xl p-4 flex items-center gap-3 shadow-sm col-span-2 sm:col-span-1">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-400">Assistidos Juntos</p>
+                    <h3 id="statTogether" class="text-lg font-bold text-slate-100">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters & Search Toolbar -->
+        <div class="flex flex-col gap-4 mb-8 bg-[#10071a] p-4 rounded-2xl border border-[#241336]">
+            <!-- Tabs Navigation -->
+            <div class="flex items-center gap-1.5 bg-[#150a21] p-1.5 rounded-xl border border-[#241336] overflow-x-auto">
+                <button onclick="setFilter('all')" id="tab-all" class="px-4 py-2 rounded-lg text-xs font-medium transition whitespace-nowrap bg-pink-600 text-white shadow">
+                    Todas as Obras
+                </button>
+                <button onclick="setFilter('pending')" id="tab-pending" class="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition whitespace-nowrap">
+                    Para Ver 🍿
+                </button>
+                <button onclick="setFilter('pedro')" id="tab-pedro" class="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition whitespace-nowrap">
+                    👤 Pedro Assistiu
+                </button>
+                <button onclick="setFilter('barbara')" id="tab-barbara" class="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition whitespace-nowrap">
+                    👤 Bárbara Assistiu
+                </button>
+                <button onclick="setFilter('together')" id="tab-together" class="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition whitespace-nowrap">
+                    👥 Assistido Juntos
+                </button>
+                <button onclick="setFilter('Filme')" id="tab-Filme" class="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition whitespace-nowrap">
+                    🎬 Filmes
+                </button>
+                <button onclick="setFilter('Série')" id="tab-Série" class="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition whitespace-nowrap">
+                    📺 Séries
+                </button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-search text-xs"></i>
+                </span>
+                <input type="text" id="searchInput" oninput="renderMovies()" placeholder="Buscar por título, gênero ou notes..." class="w-full bg-[#150a21] border border-[#241336] rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-pink-500 transition">
+            </div>
+        </div>
+
+        <!-- Movies Grid -->
+        <div id="moviesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Populated via JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden flex flex-col items-center justify-center py-16 px-4 text-center">
+            <div class="w-20 h-20 rounded-full bg-[#150a21] border border-[#241336] flex items-center justify-center text-pink-500 text-3xl mb-4">
+                <i class="fa-solid fa-clapperboard"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-200 mb-1">Nenhum título encontrado</h3>
+            <p class="text-sm text-slate-400 max-w-sm mb-6">Nesta categoria não há itens ou sua busca não retornou resultados.</p>
+            <button onclick="openAddModal()" class="bg-pink-600 hover:bg-pink-500 text-white font-medium px-4 py-2 rounded-xl text-sm transition">
+                Adicionar Filme ou Série
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-[#241336] bg-[#10071a] py-6 mt-12 text-center text-xs text-slate-500">
+        <p>Feito com todo carinho para Pedro & Bárbara — Nossa Watchlist ❤️</p>
+    </footer>
+
+    <!-- ADD / EDIT MODAL -->
+    <div id="movieModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-[#12081d] border border-[#241336] rounded-3xl max-w-lg w-full p-6 shadow-2xl relative my-8">
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-[#241336]">
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-clapperboard text-pink-500"></i> Adicionar Indicação
+                </h3>
+                <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="movieForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="movieId">
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Título</label>
+                    <input type="text" id="formTitle" required placeholder="Ex: Interestellar, Friends, Oppenheimer..." class="w-full bg-[#150a21] border border-[#241336] rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-pink-500 transition">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Tipo</label>
+                        <select id="formType" class="w-full bg-[#150a21] border border-[#241336] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-pink-500 transition">
+                            <option value="Filme">Filme 🎬</option>
+                            <option value="Série">Série 📺</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Gênero</label>
+                        <input type="text" id="formGenre" placeholder="Ex: Romance, Sci-Fi, Comédia" class="w-full bg-[#150a21] border border-[#241336] rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-pink-500 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Link de Capa / Pôster (Opcional)</label>
+                    <input type="url" id="formImage" placeholder="https://exemplo.com/poster.jpg" class="w-full bg-[#150a21] border border-[#241336] rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-pink-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Notas / Comentários Iniciais</label>
+                    <textarea id="formNotes" rows="2" placeholder="Ex: Indicado pelo Pedro, ou vamos ver no fim de semana..." class="w-full bg-[#150a21] border border-[#241336] rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-pink-500 transition"></textarea>
+                </div>
+
+                <div class="pt-4 flex items-center justify-end gap-3 border-t border-[#241336]">
+                    <button type="button" onclick="closeAddModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 transition">Cancelar</button>
+                    <button type="submit" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-medium px-6 py-2 rounded-xl text-sm shadow-lg shadow-pink-600/25 transition">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#150a21] border border-pink-500/50 text-slate-100 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300">
+        <div id="toastIcon" class="text-pink-500"><i class="fa-solid fa-circle-check"></i></div>
+        <p id="toastMessage" class="text-sm font-medium"></p>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initial Mock Data with Pedro & Bárbara items
+        let movies = JSON.parse(localStorage.getItem('nossa_watchlist_items')) || [
+            {
+                id: '1',
+                title: 'Interestellar',
+                type: 'Filme',
+                genre: 'Ficção Científica',
+                image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop',
+                notes: 'Obra prima espacial que assistimos juntos.',
+                pedroWatched: true,
+                barbaraWatched: true,
+                togetherWatched: true
+            },
+            {
+                id: '2',
+                title: 'Modern Family',
+                type: 'Série',
+                genre: 'Comédia',
+                image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=800&auto=format&fit=crop',
+                notes: 'Bárbara adora rever os episódios.',
+                pedroWatched: false,
+                barbaraWatched: true,
+                togetherWatched: false
+            },
+            {
+                id: '3',
+                title: 'Peaky Blinders',
+                type: 'Série',
+                genre: 'Drama / Crime',
+                image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800&auto=format&fit=crop',
+                notes: 'Pedro maratonou sozinho nos finais de semana.',
+                pedroWatched: true,
+                barbaraWatched: false,
+                togetherWatched: false
+            },
+            {
+                id: '4',
+                title: 'La La Land: Cantando Estações',
+                type: 'Filme',
+                genre: 'Romance / Musical',
+                image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=800&auto=format&fit=crop',
+                notes: 'Na lista para ver juntos no próximo date!',
+                pedroWatched: false,
+                barbaraWatched: false,
+                togetherWatched: false
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        window.onload = function() {
+            renderMovies();
+            updateStats();
+        };
+
+        function saveData() {
+            localStorage.setItem('nossa_watchlist_items', JSON.stringify(movies));
+            updateStats();
+        }
+
+        function updateStats() {
+            const total = movies.length;
+            const pending = movies.filter(m => !m.pedroWatched && !m.barbaraWatched && !m.togetherWatched).length;
+            const pedro = movies.filter(m => m.pedroWatched).length;
+            const barbara = movies.filter(m => m.barbaraWatched).length;
+            const together = movies.filter(m => m.togetherWatched).length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statPedro').textContent = pedro;
+            document.getElementById('statBarbara').textContent = barbara;
+            document.getElementById('statTogether').textContent = together;
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            const tabIds = ['all', 'pending', 'pedro', 'barbara', 'together', 'Filme', 'Série'];
+            tabIds.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (!btn) return;
+                if (t === filter) {
+                    btn.className = 'px-4 py-2 rounded-lg text-xs font-medium transition whitespace-nowrap bg-pink-600 text-white shadow';
+                } else {
+                    btn.className = 'px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition whitespace-nowrap';
+                }
+            });
+            renderMovies();
+        }
+
+        function renderMovies() {
+            const grid = document.getElementById('moviesGrid');
+            const emptyState = document.getElementById('emptyState');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = movies.filter(m => {
+                const matchesSearch = m.title.toLowerCase().includes(search) || 
+                                      (m.genre && m.genre.toLowerCase().includes(search)) || 
+                                      (m.notes && m.notes.toLowerCase().includes(search));
+                
+                if (!matchesSearch) return false;
+
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'pending') return !m.pedroWatched && !m.barbaraWatched && !m.togetherWatched;
+                if (currentFilter === 'pedro') return m.pedroWatched;
+                if (currentFilter === 'barbara') return m.barbaraWatched;
+                if (currentFilter === 'together') return m.togetherWatched;
+                if (currentFilter === 'Filme') return m.type === 'Filme';
+                if (currentFilter === 'Série') return m.type === 'Série';
+
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(movie => {
+                const defaultPoster = movie.type === 'Filme' 
+                    ? 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=800&auto=format&fit=crop'
+                    : 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=800&auto=format&fit=crop';
+                
+                const poster = movie.image && movie.image.trim() !== '' ? movie.image : defaultPoster;
+
+                return `
+                    <div class="bg-[#150a21] border border-[#241336] rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group hover:border-pink-500/50 transition duration-300">
+                        <div>
+                            <!-- Poster Image Container -->
+                            <div class="relative h-48 w-full overflow-hidden bg-[#10071a]">
+                                <img src="${poster}" alt="${movie.title}" onerror="this.src='${defaultPoster}'" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#150a21] via-transparent to-transparent"></div>
+                                
+                                <!-- Type Badge -->
+                                <div class="absolute top-3 right-3">
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-black/60 text-slate-200 border border-white/10 backdrop-blur-md">
+                                        ${movie.type}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Content Info -->
+                            <div class="p-4">
+                                <h3 class="font-bold text-slate-100 text-base leading-snug line-clamp-1 mb-1">${movie.title}</h3>
+                                
+                                ${movie.genre ? `<div class="mb-3"><span class="bg-[#10071a] px-2.5 py-0.5 rounded-md border border-[#241336] text-xs text-slate-400">${movie.genre}</span></div>` : ''}
+
+                                <!-- Status Badges List -->
+                                <div class="flex flex-wrap gap-1.5 mb-3">
+                                    <span class="px-2 py-0.5 rounded-md text-[11px] font-medium border ${movie.pedroWatched ? 'bg-blue-500/20 text-blue-300 border-blue-500/30' : 'bg-[#10071a] text-slate-500 border-[#241336]'}">
+                                        👤 Pedro ${movie.pedroWatched ? '✓' : ''}
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-md text-[11px] font-medium border ${movie.barbaraWatched ? 'bg-pink-500/20 text-pink-300 border-pink-500/30' : 'bg-[#10071a] text-slate-500 border-[#241336]'}">
+                                        👤 Bárbara ${movie.barbaraWatched ? '✓' : ''}
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-md text-[11px] font-medium border ${movie.togetherWatched ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' : 'bg-[#10071a] text-slate-500 border-[#241336]'}">
+                                        👥 Juntos ${movie.togetherWatched ? '✓' : ''}
+                                    </span>
+                                </div>
+
+                                ${movie.notes ? `<p class="text-xs text-slate-300 italic bg-[#10071a] p-2.5 rounded-xl border border-[#241336] line-clamp-2">"${movie.notes}"</p>` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Card Footer Toggles & Actions -->
+                        <div class="p-4 pt-2 border-t border-[#241336]/60 mt-2 bg-[#10071a]/40">
+                            <p class="text-[10px] uppercase tracking-wider text-slate-400 mb-2 font-semibold">Marcar como assistido:</p>
+                            <div class="grid grid-cols-3 gap-1.5 mb-3">
+                                <button onclick="toggleStatus('${movie.id}', 'pedroWatched')" class="py-1 px-1 rounded-lg text-[11px] font-medium border transition ${movie.pedroWatched ? 'bg-blue-600 text-white border-blue-500 shadow' : 'bg-[#150a21] text-slate-400 border-[#241336] hover:border-blue-500/50'}">
+                                    Pedro
+                                </button>
+                                <button onclick="toggleStatus('${movie.id}', 'barbaraWatched')" class="py-1 px-1 rounded-lg text-[11px] font-medium border transition ${movie.barbaraWatched ? 'bg-pink-600 text-white border-pink-500 shadow' : 'bg-[#150a21] text-slate-400 border-[#241336] hover:border-pink-500/50'}">
+                                    Bárbara
+                                </button>
+                                <button onclick="toggleStatus('${movie.id}', 'togetherWatched')" class="py-1 px-1 rounded-lg text-[11px] font-medium border transition ${movie.togetherWatched ? 'bg-purple-600 text-white border-purple-500 shadow' : 'bg-[#150a21] text-slate-400 border-[#241336] hover:border-purple-500/50'}">
+                                    Juntos
+                                </button>
+                            </div>
+
+                            <div class="flex items-center justify-end gap-1.5 pt-2 border-t border-[#241336]/40">
+                                <button onclick="openEditModal('${movie.id}')" class="px-2.5 py-1 rounded-lg bg-[#150a21] border border-[#241336] text-slate-400 hover:text-slate-200 hover:border-pink-500 transition text-xs flex items-center gap-1">
+                                    <i class="fa-solid fa-pen text-[10px]"></i> Editar
+                                </button>
+                                <button onclick="deleteMovie('${movie.id}')" class="px-2.5 py-1 rounded-lg bg-[#150a21] border border-[#241336] text-slate-400 hover:text-red-400 hover:border-red-500/50 transition text-xs flex items-center gap-1">
+                                    <i class="fa-solid fa-trash text-[10px]"></i> Excluir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleStatus(id, field) {
+            movies = movies.map(m => {
+                if (m.id === id) {
+                    const updated = { ...m, [field]: !m[field] };
+                    // If marked together, optionally update both or vice-versa if desired, keeping independent as requested
+                    return updated;
+                }
+                return m;
+            });
+            saveData();
+            renderMovies();
+            showToast('Status atualizado com sucesso!', 'success');
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-clapperboard text-pink-500"></i> Adicionar Filme ou Série';
+            document.getElementById('movieId').value = '';
+            document.getElementById('movieForm').reset();
+            document.getElementById('movieModal').classList.remove('hidden');
+            document.getElementById('movieModal').classList.add('flex');
+        }
+
+        function openEditModal(id) {
+            const movie = movies.find(m => m.id === id);
+            if (!movie) return;
+
+            document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-pen text-pink-500"></i> Editar Obra';
+            document.getElementById('movieId').value = movie.id;
+            document.getElementById('formTitle').value = movie.title;
+            document.getElementById('formType').value = movie.type;
+            document.getElementById('formGenre').value = movie.genre || '';
+            document.getElementById('formImage').value = movie.image || '';
+            document.getElementById('formNotes').value = movie.notes || '';
+
+            document.getElementById('movieModal').classList.remove('hidden');
+            document.getElementById('movieModal').classList.add('flex');
+        }
+
+        function closeAddModal() {
+            document.getElementById('movieModal').classList.remove('flex');
+            document.getElementById('movieModal').classList.add('hidden');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('movieId').value;
+            const title = document.getElementById('formTitle').value;
+            const type = document.getElementById('formType').value;
+            const genre = document.getElementById('formGenre').value;
+            const image = document.getElementById('formImage').value;
+            const notes = document.getElementById('formNotes').value;
+
+            if (id) {
+                movies = movies.map(m => m.id === id ? { ...m, title, type, genre, image, notes } : m);
+                showToast('Obra atualizada com sucesso!', 'success');
+            } else {
+                const newMovie = {
+                    id: Date.now().toString(),
+                    title,
+                    type,
+                    genre,
+                    image,
+                    notes,
+                    pedroWatched: false,
+                    barbaraWatched: false,
+                    togetherWatched: false
+                };
+                movies.unshift(newMovie);
+                showToast('Nova indicação adicionada! 🍿', 'success');
+            }
+
+            saveData();
+            renderMovies();
+            closeAddModal();
+        }
+
+        function deleteMovie(id) {
+            if (confirm('Tem certeza que deseja remover esta obra da watchlist?')) {
+                movies = movies.filter(m => m.id !== id);
+                saveData();
+                renderMovies();
+                showToast('Obra removida com sucesso.', 'info');
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMessage.textContent = message;
+            if (type === 'success') {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-check text-pink-500"></i>';
+            } else {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-info text-purple-400"></i>';
+            }
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
